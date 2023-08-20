@@ -240,6 +240,7 @@ void menu_temperature() {
       ACTION_ITEM(MSG_PREHEAT_1, []{ _preheat_end(0, 0); });
       ACTION_ITEM(MSG_PREHEAT_2, []{ _preheat_end(1, 0); });
     #endif
+
     //
     // Cooldown
     //
@@ -251,12 +252,13 @@ void menu_temperature() {
     if (has_heat) ACTION_ITEM(MSG_COOLDOWN, lcd_cooldown);
 
   #endif // HAS_TEMP_HOTEND
+
   #if DISABLED(SLIM_LCD_MENUS)
     // Preheat configurations
     SUBMENU(MSG_PREHEAT_1_SETTINGS, menu_preheat_material1_settings);
     SUBMENU(MSG_PREHEAT_2_SETTINGS, menu_preheat_material2_settings);
   #endif
-	
+
   END_MENU();
 }
 

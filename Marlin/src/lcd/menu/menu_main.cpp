@@ -35,7 +35,6 @@
 #include "../../module/stepper.h"
 #include "../../sd/cardreader.h"
 
-
 #if HAS_GAMES && DISABLED(LCD_INFO_MENU)
   #include "game/game.h"
 #endif
@@ -155,7 +154,7 @@ void menu_main() {
     #if MACHINE_CAN_PAUSE
       if (printingIsPaused()) ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
     #endif
-	
+
     SUBMENU(MSG_MOTION, menu_motion);
 	
 	SUBMENU(MSG_TEMPERATURE, menu_temperature);
@@ -210,7 +209,8 @@ void menu_main() {
     #endif
   #endif
 
- /* #if ENABLED(ADVANCED_PAUSE_FEATURE)
+/*
+  #if ENABLED(ADVANCED_PAUSE_FEATURE)
     #if E_STEPPERS == 1 && DISABLED(FILAMENT_LOAD_UNLOAD_GCODES)
       if (thermalManager.targetHotEnoughToExtrude(active_extruder))
         GCODES_ITEM(MSG_FILAMENTCHANGE, PSTR("M600 B0"));
@@ -221,6 +221,7 @@ void menu_main() {
     #endif
   #endif
 */
+
   #if ENABLED(LCD_INFO_MENU)
     SUBMENU(MSG_INFO_MENU, menu_info);
   #endif

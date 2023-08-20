@@ -46,8 +46,6 @@ void menu_bltouch();
 
   #include "../../module/motion.h"
   #include "../../gcode/queue.h"
-  
-  
 
   //
   // Motion > Level Bed handlers
@@ -288,11 +286,11 @@ void menu_bed_leveling() {
   #elif HAS_BED_PROBE
     EDIT_ITEM(float52, MSG_ZPROBE_ZOFFSET, &probe_offset.z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX);
   #endif
-  
+
   #if ENABLED(BLTOUCH)
-      SUBMENU(MSG_BLTOUCH, menu_bltouch);
+    SUBMENU(MSG_BLTOUCH, menu_bltouch);
   #endif
-  
+
   #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
 	GCODES_ITEM(MSG_M48_TEST, PSTR("G28\nM48 P10"));
   #endif
