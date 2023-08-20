@@ -252,7 +252,7 @@ void menu_info_board() {
    //STATIC_ITEM_P(PSTR(STRING_DISTRIBUTION_DATE));              // YYYY-MM-DD HH:MM
     STATIC_ITEM_P(PSTR(MACHINE_NAME));                          // My3DPrinter
     STATIC_ITEM_P(PSTR(WEBSITE_URL));                           // www.my3dprinter.com
-   /*
+/*
     char buffer[21];
     VALUE_ITEM_P(MSG_INFO_EXTRUDERS, STRINGIFY(EXTRUDERS), SS_CENTER); // Extruders: 2
     #if ENABLED(AUTO_BED_LEVELING_3POINT)
@@ -266,7 +266,7 @@ void menu_info_board() {
     #elif ENABLED(MESH_BED_LEVELING)
       STATIC_ITEM(MSG_MESH_LEVELING);                           // Mesh Leveling
     #endif
-	*/
+*/
     END_SCREEN();
   }
 

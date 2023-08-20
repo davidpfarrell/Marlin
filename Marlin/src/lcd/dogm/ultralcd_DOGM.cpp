@@ -222,11 +222,11 @@ bool MarlinUI::detected() { return true; }
     #ifndef BOOTSCREEN_TIMEOUT
       #define BOOTSCREEN_TIMEOUT 0
     #endif
-    //constexpr uint8_t pages = two_part ? 2 : 1;
-    //for (uint8_t q = pages; q--;) {
-     // draw_marlin_bootscreen(q == 0);
+//    constexpr uint8_t pages = two_part ? 2 : 1;
+//    for (uint8_t q = pages; q--;) {
+//      draw_marlin_bootscreen(q == 0);
       safe_delay(BOOTSCREEN_TIMEOUT);
-    //}
+//    }
   }
 
   void MarlinUI::show_bootscreen() {

@@ -48,6 +48,7 @@
 #endif
 
 #define HAS_DEBUG_MENU ENABLED(LCD_PROGRESS_BAR_TEST)
+
 void menu_advanced_settings();
 void menu_advanced_filament();
 #if EITHER(DELTA_CALIBRATION_MENU, DELTA_AUTO_CALIBRATION)
@@ -319,12 +320,14 @@ void menu_configuration() {
 
   //SUBMENU(MSG_ADVANCED_SETTINGS, menu_advanced_settings);
 
-  /*#if ENABLED(BABYSTEP_ZPROBE_OFFSET)
+/*
+  #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
     SUBMENU(MSG_ZPROBE_ZOFFSET, lcd_babystep_zoffset);
   #elif HAS_BED_PROBE
     EDIT_ITEM(float52, MSG_ZPROBE_ZOFFSET, &probe_offset.z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX);
   #endif
-  */
+*/
+
   #if ENABLED(ADVANCED_PAUSE_FEATURE)
     #if E_STEPPERS == 1 && DISABLED(FILAMENT_LOAD_UNLOAD_GCODES)
       if (thermalManager.targetHotEnoughToExtrude(active_extruder))
@@ -352,10 +355,12 @@ void menu_configuration() {
       SUBMENU(MSG_IDEX_MENU, menu_idex);
     #endif
 
-    /*#if ENABLED(BLTOUCH)
+/*
+    #if ENABLED(BLTOUCH)
       SUBMENU(MSG_BLTOUCH, menu_bltouch);
     #endif
-    */
+*/
+
     #if ENABLED(TOUCH_MI_PROBE)
       SUBMENU(MSG_TOUCHMI_PROBE, menu_touchmi);
     #endif
@@ -379,7 +384,7 @@ void menu_configuration() {
     #endif
         EDIT_ITEM(bool, MSG_CASE_LIGHT, (bool*)&case_light_on, update_case_light);
   #endif
-  
+
   #if HAS_LCD_CONTRAST
     EDIT_ITEM(int3, MSG_CONTRAST, &ui.contrast, LCD_CONTRAST_MIN, LCD_CONTRAST_MAX, ui.refresh_contrast, true);
   #endif
@@ -405,6 +410,7 @@ void menu_configuration() {
   #if ENABLED(POWER_LOSS_RECOVERY)
     EDIT_ITEM(bool, MSG_OUTAGE_RECOVERY, &recovery.enabled, recovery.changed);
   #endif
+
 /*
   #if DISABLED(SLIM_LCD_MENUS)
     // Preheat configurations
@@ -412,6 +418,7 @@ void menu_configuration() {
     SUBMENU(MSG_PREHEAT_2_SETTINGS, menu_preheat_material2_settings);
   #endif
 */
+
   #if ENABLED(EEPROM_SETTINGS)
     ACTION_ITEM(MSG_STORE_EEPROM, lcd_store_settings);
     if (!busy)
