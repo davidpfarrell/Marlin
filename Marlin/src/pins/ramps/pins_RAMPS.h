@@ -66,7 +66,7 @@
 //
 #ifndef SERVO0_PIN
   #ifdef IS_RAMPS_13
-    #define SERVO0_PIN      7
+    #define SERVO0_PIN      11
   #else
     #define SERVO0_PIN     11
   #endif
@@ -79,6 +79,11 @@
 #endif
 #ifndef SERVO3_PIN
   #define SERVO3_PIN        4
+#endif
+
+// define digital pin 4 for the filament runout sensor. Use the RAMPS 1.4 digital input 4 on the servos connector
+#ifndef FIL_RUNOUT_PIN
+  #define FIL_RUNOUT_PIN   2
 #endif
 
 //
