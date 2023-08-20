@@ -103,8 +103,8 @@ void menu_info_thermistors() {
     #define THERMISTOR_ID TEMP_SENSOR_0
     #include "../thermistornames.h"
     STATIC_ITEM_P(PSTR(LCD_STR_E0 ": " THERMISTOR_NAME), SS_INVERT);
-    VALUE_ITEM_P(MSG_INFO_MIN_TEMP, STRINGIFY(HEATER_0_MINTEMP), SS_LEFT);
-    VALUE_ITEM_P(MSG_INFO_MAX_TEMP, STRINGIFY(HEATER_0_MAXTEMP), SS_LEFT);
+    VALUE_ITEM_P(MSG_INFO_MIN_TEMP, STRINGIFY(0), SS_LEFT);
+    VALUE_ITEM_P(MSG_INFO_MAX_TEMP, STRINGIFY(260), SS_LEFT);
   #endif
 
   #if TEMP_SENSOR_1 != 0
@@ -171,8 +171,8 @@ void menu_info_thermistors() {
     #define THERMISTOR_ID TEMP_SENSOR_BED
     #include "../thermistornames.h"
     STATIC_ITEM_P(PSTR("BED:" THERMISTOR_NAME), SS_INVERT);
-    VALUE_ITEM_P(MSG_INFO_MIN_TEMP, STRINGIFY(BED_MINTEMP), SS_LEFT);
-    VALUE_ITEM_P(MSG_INFO_MAX_TEMP, STRINGIFY(BED_MAXTEMP), SS_LEFT);
+    VALUE_ITEM_P(MSG_INFO_MIN_TEMP, STRINGIFY(0), SS_LEFT);
+    VALUE_ITEM_P(MSG_INFO_MAX_TEMP, STRINGIFY(115), SS_LEFT);
     STATIC_ITEM(
       #if WATCH_BED
         MSG_INFO_RUNAWAY_ON
@@ -249,9 +249,10 @@ void menu_info_board() {
     START_SCREEN();
     STATIC_ITEM_P(PSTR(MSG_MARLIN), SS_CENTER|SS_INVERT);       // Marlin
     STATIC_ITEM_P(PSTR(SHORT_BUILD_VERSION));                   // x.x.x-Branch
-    STATIC_ITEM_P(PSTR(STRING_DISTRIBUTION_DATE));              // YYYY-MM-DD HH:MM
+   //STATIC_ITEM_P(PSTR(STRING_DISTRIBUTION_DATE));              // YYYY-MM-DD HH:MM
     STATIC_ITEM_P(PSTR(MACHINE_NAME));                          // My3DPrinter
     STATIC_ITEM_P(PSTR(WEBSITE_URL));                           // www.my3dprinter.com
+   /*
     char buffer[21];
     VALUE_ITEM_P(MSG_INFO_EXTRUDERS, STRINGIFY(EXTRUDERS), SS_CENTER); // Extruders: 2
     #if ENABLED(AUTO_BED_LEVELING_3POINT)
@@ -265,6 +266,7 @@ void menu_info_board() {
     #elif ENABLED(MESH_BED_LEVELING)
       STATIC_ITEM(MSG_MESH_LEVELING);                           // Mesh Leveling
     #endif
+	*/
     END_SCREEN();
   }
 

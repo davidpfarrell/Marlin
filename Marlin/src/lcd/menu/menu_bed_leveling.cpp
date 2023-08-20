@@ -35,11 +35,19 @@
 #if HAS_BED_PROBE && DISABLED(BABYSTEP_ZPROBE_OFFSET)
   #include "../../module/probe.h"
 #endif
-
+#if HAS_BED_PROBE
+  #include "../../module/probe.h"
+  #if ENABLED(BLTOUCH)
+    #include "../../feature/bltouch.h"
+  #endif
+#endif
+void menu_bltouch();
 #if EITHER(PROBE_MANUALLY, MESH_BED_LEVELING)
 
   #include "../../module/motion.h"
   #include "../../gcode/queue.h"
+  
+  
 
   //
   // Motion > Level Bed handlers
@@ -235,13 +243,14 @@
  */
 void menu_bed_leveling() {
   START_MENU();
-  BACK_ITEM(MSG_MOTION);
+  BACK_ITEM(MSG_MAIN);
 
   const bool is_homed = all_axes_known();
 
   // Auto Home if not using manual probing
   #if NONE(PROBE_MANUALLY, MESH_BED_LEVELING)
-    if (!is_homed) GCODES_ITEM(MSG_AUTO_HOME, G28_STR);
+    //if (!is_homed) 
+	GCODES_ITEM(MSG_AUTO_HOME, PSTR("G28\nG1 F240 Z0"));
   #endif
 
   // Level Bed
@@ -263,12 +272,8 @@ void menu_bed_leveling() {
     bool show_state = planner.leveling_active;
     EDIT_ITEM(bool, MSG_BED_LEVELING, &show_state, _lcd_toggle_bed_leveling);
   }
-
-  // Z Fade Height
-  #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
-    // Shadow for editing the fade height
-    editable.decimal = planner.z_fade_height;
-    EDIT_ITEM_FAST(float3, MSG_Z_FADE_HEIGHT, &editable.decimal, 0, 100, []{ set_z_fade_height(editable.decimal); });
+  #if ENABLED(LEVEL_BED_CORNERS)
+    SUBMENU(MSG_LEVEL_CORNERS, _lcd_level_bed_corners);
   #endif
 
   //
@@ -283,11 +288,22 @@ void menu_bed_leveling() {
   #elif HAS_BED_PROBE
     EDIT_ITEM(float52, MSG_ZPROBE_ZOFFSET, &probe_offset.z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX);
   #endif
-
-  #if ENABLED(LEVEL_BED_CORNERS)
-    SUBMENU(MSG_LEVEL_CORNERS, _lcd_level_bed_corners);
+  
+  #if ENABLED(BLTOUCH)
+      SUBMENU(MSG_BLTOUCH, menu_bltouch);
   #endif
-
+  
+  #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
+	GCODES_ITEM(MSG_M48_TEST, PSTR("G28\nM48 P10"));
+  #endif
+  
+  // Z Fade Height
+  #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
+    // Shadow for editing the fade height
+    editable.decimal = planner.z_fade_height;
+    EDIT_ITEM_FAST(float3, MSG_Z_FADE_HEIGHT, &editable.decimal, 0, 100, []{ set_z_fade_height(editable.decimal); });
+  #endif
+  
   #if ENABLED(EEPROM_SETTINGS)
     ACTION_ITEM(MSG_LOAD_EEPROM, lcd_load_settings);
     ACTION_ITEM(MSG_STORE_EEPROM, lcd_store_settings);

@@ -100,7 +100,7 @@ void _menu_temp_filament_op(const PauseMode mode, const int8_t extruder) {
 #if E_STEPPERS > 1 || ENABLED(FILAMENT_LOAD_UNLOAD_GCODES)
   void menu_change_filament() {
     START_MENU();
-    BACK_ITEM(MSG_MAIN);
+    BACK_ITEM(MSG_CONFIGURATION);
 
     // Say "filament change" when no print is active
     editable.int8 = printingIsPaused() ? PAUSE_MODE_PAUSE_PRINT : PAUSE_MODE_CHANGE_FILAMENT;

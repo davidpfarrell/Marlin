@@ -35,6 +35,7 @@
 #include "../../module/stepper.h"
 #include "../../sd/cardreader.h"
 
+
 #if HAS_GAMES && DISABLED(LCD_INFO_MENU)
   #include "game/game.h"
 #endif
@@ -46,19 +47,33 @@
   #include "../../lcd/menu/menu_mmu2.h"
 #endif
 
+#if HAS_LEVELING
+  #include "../../module/planner.h"
+  #include "../../feature/bedlevel/bedlevel.h"
+#endif
+
 void menu_tune();
 void menu_motion();
 void menu_temperature();
 void menu_configuration();
+void menu_advanced_settings();
+
+#if ENABLED(AUTO_BED_LEVELING_UBL)
+  void _lcd_ubl_level_bed();
+#elif ENABLED(LCD_BED_LEVELING)
+  void menu_bed_leveling();
+#endif
 
 #if ENABLED(CUSTOM_USER_MENUS)
   void menu_user();
 #endif
 
+/*
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   void _menu_temp_filament_op(const PauseMode, const int8_t);
   void menu_change_filament();
 #endif
+*/
 
 #if ENABLED(LCD_INFO_MENU)
   void menu_info();
@@ -104,6 +119,7 @@ void menu_main() {
       });
     #endif
     SUBMENU(MSG_TUNE, menu_tune);
+	SUBMENU(MSG_ADVANCED_SETTINGS, menu_advanced_settings);
   }
   else {
     #if !HAS_ENCODER_WHEEL && ENABLED(SDSUPPORT)
@@ -139,15 +155,38 @@ void menu_main() {
     #if MACHINE_CAN_PAUSE
       if (printingIsPaused()) ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
     #endif
-
+	
     SUBMENU(MSG_MOTION, menu_motion);
+	
+	SUBMENU(MSG_TEMPERATURE, menu_temperature);
+	
+	 #if ENABLED(AUTO_BED_LEVELING_UBL)
+    SUBMENU(MSG_UBL_LEVEL_BED, _lcd_ubl_level_bed);
+  #elif ENABLED(LCD_BED_LEVELING)
+
+    if (!g29_in_progress) SUBMENU(MSG_BED_LEVELING, menu_bed_leveling);
+
+  #elif HAS_LEVELING && DISABLED(SLIM_LCD_MENUS)
+
+    #if DISABLED(PROBE_MANUALLY)
+      GCODES_ITEM(MSG_LEVEL_BED, PSTR("G28\nG29"));
+    #endif
+    if (all_axes_homed() && leveling_is_valid()) {
+      bool show_state = planner.leveling_active;
+      EDIT_ITEM(bool, MSG_BED_LEVELING, &show_state, _lcd_toggle_bed_leveling);
+    }
+    #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
+      editable.decimal = planner.z_fade_height;
+      EDIT_ITEM_FAST(float3, MSG_Z_FADE_HEIGHT, &editable.decimal, 0, 100, []{ set_z_fade_height(editable.decimal); });
+    #endif
+
+  #endif
+	
   }
 
   #if HAS_CUTTER
     SUBMENU(MSG_CUTTER(MENU), menu_spindle_laser);
   #endif
-
-  SUBMENU(MSG_TEMPERATURE, menu_temperature);
 
   #if ENABLED(MIXING_EXTRUDER)
     SUBMENU(MSG_MIXER, menu_mixer);
@@ -157,6 +196,10 @@ void menu_main() {
     if (!busy) SUBMENU(MSG_MMU2_MENU, menu_mmu2);
   #endif
 
+  #if ENABLED(LEVEL_BED_CORNERS) && DISABLED(LCD_BED_LEVELING)
+    if (!busy) ACTION_ITEM(MSG_LEVEL_CORNERS, _lcd_level_bed_corners);
+  #endif
+  
   SUBMENU(MSG_CONFIGURATION, menu_configuration);
 
   #if ENABLED(CUSTOM_USER_MENUS)
@@ -167,7 +210,7 @@ void menu_main() {
     #endif
   #endif
 
-  #if ENABLED(ADVANCED_PAUSE_FEATURE)
+ /* #if ENABLED(ADVANCED_PAUSE_FEATURE)
     #if E_STEPPERS == 1 && DISABLED(FILAMENT_LOAD_UNLOAD_GCODES)
       if (thermalManager.targetHotEnoughToExtrude(active_extruder))
         GCODES_ITEM(MSG_FILAMENTCHANGE, PSTR("M600 B0"));
@@ -177,7 +220,7 @@ void menu_main() {
       SUBMENU(MSG_FILAMENTCHANGE, menu_change_filament);
     #endif
   #endif
-
+*/
   #if ENABLED(LCD_INFO_MENU)
     SUBMENU(MSG_INFO_MENU, menu_info);
   #endif
