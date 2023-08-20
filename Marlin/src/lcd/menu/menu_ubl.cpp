@@ -604,7 +604,7 @@ void _lcd_ubl_step_by_step() {
 
 void _lcd_ubl_level_bed() {
   START_MENU();
-  BACK_ITEM(MSG_MOTION);
+  BACK_ITEM(MSG_WATCH);
   if (planner.leveling_active)
     GCODES_ITEM(MSG_UBL_DEACTIVATE_MESH, PSTR("G29 D"));
   else
@@ -619,6 +619,7 @@ void _lcd_ubl_level_bed() {
     editable.decimal = planner.z_fade_height;
     EDIT_ITEM_FAST(float3, MSG_Z_FADE_HEIGHT, &editable.decimal, 0, 100, []{ set_z_fade_height(editable.decimal); });
   #endif
+  
   END_MENU();
 }
 
