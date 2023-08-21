@@ -318,7 +318,7 @@ void menu_configuration() {
     SUBMENU(MSG_DEBUG_MENU, menu_debug);
   #endif
 
-  //SUBMENU(MSG_ADVANCED_SETTINGS, menu_advanced_settings);
+//  SUBMENU(MSG_ADVANCED_SETTINGS, menu_advanced_settings);
 
 /*
   #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
@@ -338,6 +338,7 @@ void menu_configuration() {
       SUBMENU(MSG_FILAMENTCHANGE, menu_change_filament);
     #endif
   #endif
+
   const bool busy = printer_busy();
   if (!busy) {
     //
