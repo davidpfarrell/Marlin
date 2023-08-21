@@ -35,6 +35,7 @@
 #if HAS_BED_PROBE && DISABLED(BABYSTEP_ZPROBE_OFFSET)
   #include "../../module/probe.h"
 #endif
+
 #if HAS_BED_PROBE
   #include "../../module/probe.h"
   #if ENABLED(BLTOUCH)
@@ -42,6 +43,7 @@
   #endif
 #endif
 void menu_bltouch();
+
 #if EITHER(PROBE_MANUALLY, MESH_BED_LEVELING)
 
   #include "../../module/motion.h"
@@ -247,8 +249,8 @@ void menu_bed_leveling() {
 
   // Auto Home if not using manual probing
   #if NONE(PROBE_MANUALLY, MESH_BED_LEVELING)
-    //if (!is_homed) 
-	GCODES_ITEM(MSG_AUTO_HOME, PSTR("G28\nG1 F240 Z0"));
+//  if (!is_homed) GCODES_ITEM(MSG_AUTO_HOME, G28_STR);
+    GCODES_ITEM(MSG_AUTO_HOME, PSTR("G28\nG1 F240 Z0"));
   #endif
 
   // Level Bed
