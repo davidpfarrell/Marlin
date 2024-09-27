@@ -604,7 +604,7 @@ void _lcd_ubl_step_by_step() {
 
 void _lcd_ubl_level_bed() {
   START_MENU();
-  BACK_ITEM(MSG_MOTION);
+  BACK_ITEM(MSG_WATCH);
   if (planner.leveling_active)
     GCODES_ITEM(MSG_UBL_DEACTIVATE_MESH, PSTR("G29 D"));
   else

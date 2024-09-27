@@ -50,8 +50,14 @@
 #define HAS_DEBUG_MENU ENABLED(LCD_PROGRESS_BAR_TEST)
 
 void menu_advanced_settings();
+void menu_advanced_filament();
 #if EITHER(DELTA_CALIBRATION_MENU, DELTA_AUTO_CALIBRATION)
   void menu_delta_calibrate();
+#endif
+
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  void _menu_temp_filament_op(const PauseMode, const int8_t);
+  void menu_change_filament();
 #endif
 
 #if ENABLED(LCD_PROGRESS_BAR_TEST)
@@ -195,7 +201,7 @@ void menu_advanced_settings();
 
   void menu_bltouch() {
     START_MENU();
-    BACK_ITEM(MSG_CONFIGURATION);
+    BACK_ITEM(MSG_BED_LEVELING);
     ACTION_ITEM(MSG_BLTOUCH_RESET, bltouch._reset);
     ACTION_ITEM(MSG_BLTOUCH_SELFTEST, bltouch._selftest);
     ACTION_ITEM(MSG_BLTOUCH_DEPLOY, bltouch._deploy);
@@ -282,7 +288,7 @@ void menu_advanced_settings();
     #define MINTEMP_ALL _MIN(REPEAT(HOTENDS, _MINTEMP_ITEM) 999)
     #define MAXTEMP_ALL _MAX(REPEAT(HOTENDS, _MAXTEMP_ITEM) 0)
     START_MENU();
-    BACK_ITEM(MSG_CONFIGURATION);
+    BACK_ITEM(MSG_TEMPERATURE);
     EDIT_ITEM(percent, MSG_FAN_SPEED, &ui.preheat_fan_speed[material], 0, 255);
     #if HAS_TEMP_HOTEND
       EDIT_ITEM(int3, MSG_NOZZLE, &ui.preheat_hotend_temp[material], MINTEMP_ALL, MAXTEMP_ALL - 15);
@@ -312,12 +318,25 @@ void menu_configuration() {
     SUBMENU(MSG_DEBUG_MENU, menu_debug);
   #endif
 
-  SUBMENU(MSG_ADVANCED_SETTINGS, menu_advanced_settings);
+//  SUBMENU(MSG_ADVANCED_SETTINGS, menu_advanced_settings);
 
+/*
   #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
     SUBMENU(MSG_ZPROBE_ZOFFSET, lcd_babystep_zoffset);
   #elif HAS_BED_PROBE
     EDIT_ITEM(float52, MSG_ZPROBE_ZOFFSET, &probe_offset.z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX);
+  #endif
+*/
+
+  #if ENABLED(ADVANCED_PAUSE_FEATURE)
+    #if E_STEPPERS == 1 && DISABLED(FILAMENT_LOAD_UNLOAD_GCODES)
+      if (thermalManager.targetHotEnoughToExtrude(active_extruder))
+        GCODES_ITEM(MSG_FILAMENTCHANGE, PSTR("M600 B0"));
+      else
+        SUBMENU(MSG_FILAMENTCHANGE, []{ _menu_temp_filament_op(PAUSE_MODE_CHANGE_FILAMENT, 0); });
+    #else
+      SUBMENU(MSG_FILAMENTCHANGE, menu_change_filament);
+    #endif
   #endif
 
   const bool busy = printer_busy();
@@ -337,9 +356,11 @@ void menu_configuration() {
       SUBMENU(MSG_IDEX_MENU, menu_idex);
     #endif
 
+/*
     #if ENABLED(BLTOUCH)
       SUBMENU(MSG_BLTOUCH, menu_bltouch);
     #endif
+*/
 
     #if ENABLED(TOUCH_MI_PROBE)
       SUBMENU(MSG_TOUCHMI_PROBE, menu_touchmi);
@@ -375,16 +396,29 @@ void menu_configuration() {
   #if HAS_FILAMENT_SENSOR
     EDIT_ITEM(bool, MSG_RUNOUT_SENSOR, &runout.enabled, runout.reset);
   #endif
+  
+  #if DISABLED(NO_VOLUMETRICS) || ENABLED(ADVANCED_PAUSE_FEATURE)
+    SUBMENU(MSG_FILAMENT, menu_advanced_filament);
+  #elif ENABLED(LIN_ADVANCE)
+    #if EXTRUDERS == 1
+      EDIT_ITEM(float52, MSG_ADVANCE_K, &planner.extruder_advance_K[0], 0, 999);
+    #elif EXTRUDERS > 1
+      #define EDIT_ADVANCE_K(N) EDIT_ITEM_N(float52, N, MSG_ADVANCE_K_E, &planner.extruder_advance_K[N], 0, 999)
+      for (uint8_t n = 0; n < E_STEPPERS; n++) EDIT_ADVANCE_K(n);
+    #endif
+  #endif
 
   #if ENABLED(POWER_LOSS_RECOVERY)
     EDIT_ITEM(bool, MSG_OUTAGE_RECOVERY, &recovery.enabled, recovery.changed);
   #endif
 
+/*
   #if DISABLED(SLIM_LCD_MENUS)
     // Preheat configurations
     SUBMENU(MSG_PREHEAT_1_SETTINGS, menu_preheat_material1_settings);
     SUBMENU(MSG_PREHEAT_2_SETTINGS, menu_preheat_material2_settings);
   #endif
+*/
 
   #if ENABLED(EEPROM_SETTINGS)
     ACTION_ITEM(MSG_STORE_EEPROM, lcd_store_settings);

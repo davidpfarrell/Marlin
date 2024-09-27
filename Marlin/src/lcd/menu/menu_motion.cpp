@@ -46,6 +46,8 @@
   #include "../../feature/bedlevel/bedlevel.h"
 #endif
 
+void menu_advanced_settings();
+
 extern millis_t manual_move_start_time;
 extern int8_t manual_move_axis;
 #if ENABLED(MANUAL_E_MOVES_RELATIVE)
@@ -404,6 +406,7 @@ void menu_motion() {
   //
   // Level Bed
   //
+/*
   #if ENABLED(AUTO_BED_LEVELING_UBL)
 
     SUBMENU(MSG_UBL_LEVEL_BED, _lcd_ubl_level_bed);
@@ -435,11 +438,14 @@ void menu_motion() {
   #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
     GCODES_ITEM(MSG_M48_TEST, PSTR("G28\nM48 P10"));
   #endif
+*/
 
   //
   // Disable Steppers
   //
   GCODES_ITEM(MSG_DISABLE_STEPPERS, PSTR("M84"));
+
+  SUBMENU(MSG_ADVANCED_SETTINGS, menu_advanced_settings);
 
   END_MENU();
 }

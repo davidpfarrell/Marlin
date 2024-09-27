@@ -108,7 +108,7 @@ void menu_cancelobject();
   //
   void menu_advanced_filament() {
     START_MENU();
-    BACK_ITEM(MSG_ADVANCED_SETTINGS);
+    BACK_ITEM(MSG_CONFIGURATION);
 
     #if ENABLED(LIN_ADVANCE)
       #if EXTRUDERS == 1
@@ -516,16 +516,22 @@ void menu_advanced_settings() {
     lcd_runout_distance_mm = runout.runout_distance();
   #endif
   START_MENU();
-  BACK_ITEM(MSG_CONFIGURATION);
-
+  if (!printer_busy()){
+      BACK_ITEM(MSG_MOTION);
+  }
+  else{
+	  BACK_ITEM(MSG_MAIN);
+  }
   #if DISABLED(SLIM_LCD_MENUS)
 
+/*
     #if HAS_M206_COMMAND
       //
       // Set Home Offsets
       //
       ACTION_ITEM(MSG_SET_HOME_OFFSETS, []{ queue.inject_P(PSTR("M428")); ui.return_to_status(); });
     #endif
+*/
 
     // M203 / M205 - Feedrate items
     SUBMENU(MSG_VELOCITY, menu_advanced_velocity);
@@ -561,6 +567,7 @@ void menu_advanced_settings() {
     SUBMENU(MSG_TMC_DRIVERS, menu_tmc);
   #endif
 
+/*
   #if SHOW_MENU_ADVANCED_TEMPERATURE
     SUBMENU(MSG_TEMPERATURE, menu_advanced_temperature);
   #endif
@@ -575,6 +582,7 @@ void menu_advanced_settings() {
       for (uint8_t n = 0; n < E_STEPPERS; n++) EDIT_ADVANCE_K(n);
     #endif
   #endif
+*/
 
   // M540 S - Abort on endstop hit when SD printing
   #if ENABLED(SD_ABORT_ON_ENDSTOP_HIT)

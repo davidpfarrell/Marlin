@@ -38,7 +38,8 @@
 #if ENABLED(SINGLENOZZLE)
   #include "../../module/tool_change.h"
 #endif
-
+void menu_preheat_material1_settings();
+void menu_preheat_material2_settings();
 // Initialized by settings.load()
 int16_t MarlinUI::preheat_hotend_temp[2], MarlinUI::preheat_bed_temp[2];
 uint8_t MarlinUI::preheat_fan_speed[2];
@@ -251,6 +252,12 @@ void menu_temperature() {
     if (has_heat) ACTION_ITEM(MSG_COOLDOWN, lcd_cooldown);
 
   #endif // HAS_TEMP_HOTEND
+
+  #if DISABLED(SLIM_LCD_MENUS)
+    // Preheat configurations
+    SUBMENU(MSG_PREHEAT_1_SETTINGS, menu_preheat_material1_settings);
+    SUBMENU(MSG_PREHEAT_2_SETTINGS, menu_preheat_material2_settings);
+  #endif
 
   END_MENU();
 }

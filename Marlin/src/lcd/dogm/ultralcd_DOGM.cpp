@@ -153,7 +153,7 @@ bool MarlinUI::detected() { return true; }
         }
 
       #ifndef CUSTOM_BOOTSCREEN_TIMEOUT
-        #define CUSTOM_BOOTSCREEN_TIMEOUT 2500
+        #define CUSTOM_BOOTSCREEN_TIMEOUT 2000
       #endif
       safe_delay(CUSTOM_BOOTSCREEN_TIMEOUT);
     }
@@ -220,13 +220,13 @@ bool MarlinUI::detected() { return true; }
   // Show the Marlin bootscreen, with the u8g loop and delays
   void MarlinUI::show_marlin_bootscreen() {
     #ifndef BOOTSCREEN_TIMEOUT
-      #define BOOTSCREEN_TIMEOUT 2500
+      #define BOOTSCREEN_TIMEOUT 0
     #endif
-    constexpr uint8_t pages = two_part ? 2 : 1;
-    for (uint8_t q = pages; q--;) {
-      draw_marlin_bootscreen(q == 0);
-      safe_delay((BOOTSCREEN_TIMEOUT) / pages);
-    }
+//    constexpr uint8_t pages = two_part ? 2 : 1;
+//    for (uint8_t q = pages; q--;) {
+//      draw_marlin_bootscreen(q == 0);
+      safe_delay(BOOTSCREEN_TIMEOUT);
+//    }
   }
 
   void MarlinUI::show_bootscreen() {
